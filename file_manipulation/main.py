@@ -1,45 +1,50 @@
-"""
-idea:
-1) list all files under given dir
-2) for reach file, check for dir, .txt, .html, .jpg
-3) for dir, only check for name 'pictures', and move .jpg files into it
-4) for .html, rename them to .htm 
-5) for .txt, create a new file 'stuff.txt' and read all .txt and write to 'stuff.txt'
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for file_manipulation.
 
-complexity: O(NlogN) where N is number of files
+plan:
+1. look for files ending in .jpg -> file.endswith('.jpg') then move to new dir
+2. look for files ending in .jpg -> file.endswith('.html') then move to new dir
+3. write all .txt files to a list then write list to file
+
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of file_manipulation.
 """
-from absl import app
+
 import os
+import shutil
 
-def main(argv):
-    file_mani(argv[1])
 
-def file_mani(dir):
-    if not os.path.isdir(dir):
-        return False
-    files = os.listdir(dir)
-    text_files = []
-    for i in files:
-        if i == 'pictures':
-            if not os.path.isdir(dir + '/' + i):
-                return False
-        elif i.split('.')[-1] == 'jpg':
-            os.rename(dir + '/' + i, dir + '/pictures/' + i)
-        elif i.split('.')[-1] == 'txt':
-            text_files.append(i)
-        elif i.split('.')[-1] == 'html':
-            os.rename(dir + '/' + i, dir + '/' + i[:-1])
-    text_files = sorted(text_files)
-    with open(dir + '/stuff.txt', 'w') as fd:
-        for t in text_files:
-            with open(dir + '/' + t, 'r') as f:
-                fd.write(f.read())
-    return True
+def file_manipulation(directory):
+  # create dir to hold .jpgs
+  picture_dir_path = '/google/src/cloud/dduclayan/daily-coding-challenge/google3/experimental/users/dduclayan/python/file_manipulation_dir/pictures/'
+  if os.path.exists(picture_dir_path):
+    shutil.rmtree(picture_dir_path)
+  os.mkdir(picture_dir_path)
+
+  parent_path = '/google/src/cloud/dduclayan/daily-coding-challenge/google3/experimental/users/dduclayan/python/file_manipulation_dir/'
+  for file in os.listdir(directory):
+    txt_files = []
+    # changes file into /path/to/file
+    # file_path = os.fsdecode(file)
+    if file.endswith('.html'):
+      pre, _ = os.path.splitext(file)
+      os.rename(parent_path + file, parent_path + pre + '.htm')
+      # print(f'pre = {pre}')
+    if file.endswith('.jpg'):
+      os.path.join(picture_dir_path, file)
+    if file.endswith('.txt'):
+      txt_files.append(file)
+
+    txt_files.sort()
+    with open('stuff.txt', 'w'):
+      for file in txt_files:
+        
+
+
+
+def main():
+  directory = '/google/src/cloud/dduclayan/daily-coding-challenge/google3/experimental/users/dduclayan/python/file_manipulation_dir'
+  file_manipulation(directory)
+
 
 if __name__ == '__main__':
-    app.run(main)
-
-
-
-
-
+  main()
