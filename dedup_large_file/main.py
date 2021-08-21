@@ -1,24 +1,41 @@
-"""
-idea: 
-1) Note that we need generator for reading large file
-2) Note that the order of reading lines matters, we will use OrderedDict here
-3) Once we finish reading the whole, write the lines in the OD to a new file
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for dedup_file.
 
-complexity: O(N) where N is the number of lines
+plan:
+1. add lines to a list
+2. loop through list and add them to a dict to remove dupes
+3. write key(line) to file
+
+can't use set. sets are unordered and you can't run sorted() on them.
+could use ordered dict
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of dedup_file.
 """
 
-from collections import OrderedDict
 import sys
 
-def dedup_large_file(file):
-    line_gen = (line for line in open(file, 'r'))
-    dic = OrderedDict()
-    for line in line_gen:
-        if line not in dic:
-            dic[line] = True
-        dic[line] = True
-    with open('new_file', 'w') as f:
-        for k,_ in dic.items():
-            f.write(k)
 
-dedup_large_file(sys.argv[1])
+def dedup(file):
+  """Turns the lines of a file into a dict, then write dict to file."""
+  file_lines = []
+  file_dict = {}
+
+  with open(file, 'r') as in_file:
+    file = [line.rstrip() for line in in_file]
+    for li in file:  # O(n)
+      file_lines.append(li)
+
+  for line in file_lines:  # O(n)
+    file_dict[line] = 1
+
+  with open('new_file1.txt', 'w') as out_file:
+    for key in file_dict:  # O(n)
+      out_file.write(key + '\n')
+
+
+def main():
+  file = sys.argv[1]
+  dedup(file)
+
+
+if __name__ == '__main__':
+  main()
