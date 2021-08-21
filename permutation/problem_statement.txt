@@ -1,0 +1,7 @@
+Given two strings, check if they are a permutation of eachother
+
+input:
+'cobra', 'braco'
+
+output:
+True
