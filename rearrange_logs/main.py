@@ -1,54 +1,75 @@
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for rearrange_logs.
+
+question:
+can I assume that the log file is already sorted by date?
+
+plan:
+1. create dict for each api call to count calls
+2. read through log files line by line
+3. if line contains '<api call>', add line to '<api> file'
+
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of rearrange_logs.
 """
-idea:
-1) read all lines and check each line
-2) when seeing Get, Set, or Add, save the line to get_log, set_log, or add_log
-3) create a dict for each function and use date as key, counter as value
-4) once finish all lines, write the dict to stats_log
+import sys
 
-Complexity: O(N) where N is the number of all lines
-"""
-
-from absl import app
-
-def main(argv):
-    rearrange_logs(argv[1:])
 
 def rearrange_logs(files):
-    g_dic = {}
-    s_dic = {}
-    a_dic = {}
-    with open('get_log', 'w') as f1, open('set_log', 'w') as f2, open('add_log', 'w') as f3:
-        for file in files:
-            with open(file, 'r') as f:
-                for line in f:
-                    call = line.split()[2]
-                    date = line.split()[1]
-                    if call == 'Get':
-                        f1.write(line)
-                        if date not in g_dic:
-                            g_dic[date] = 0
-                        g_dic[date] += 1
-                    elif call == 'Set':
-                        f2.write(line)
-                        if date not in s_dic:
-                            s_dic[date] = 0
-                        s_dic[date] += 1
-                    else:
-                        f3.write(line)
-                        if date not in a_dic:
-                            a_dic[date] = 0
-                        a_dic[date] += 1
-    with open('stats_log', 'w') as f4:
-        f4.write('Get\n')
-        for k,v in g_dic.items():
-            f4.write(k + ' ' + str(v) + '\n')
-        f4.write('Set\n')
-        for k,v in s_dic.items():
-            f4.write(k + ' ' + str(v) + '\n')
-        f4.write('Add\n')
-        for k,v in a_dic.items():
-            f4.write(k + ' ' + str(v) + '\n')
-    return
+  log_files = []
+
+  for file in files:
+    log_files.append(file)
+
+  get_dict = {}
+  add_dict = {}
+  set_dict = {}
+  with open('get_log.txt',
+            'w') as get_log_out, open('set_log.txt', 'w') as set_log_out, open(
+                'add_log.txt', 'w') as add_log_out:
+    for file in log_files:
+      with open(file, 'r') as in_file:
+        for line in in_file:
+          segment = line.split()
+          date = segment[1]
+          call = segment[2]
+
+          if call == 'Get':
+            get_log_out.write(line)
+            if date in get_dict:
+              get_dict[date] += 1
+            else:
+              get_dict[date] = 1
+
+          if call == 'Set':
+            set_log_out.write(line)
+            if date in set_dict:
+              set_dict[date] += 1
+            else:
+              set_dict[date] = 1
+
+          if call == 'Add':
+            add_log_out.write(line)
+            if date in add_dict:
+              add_dict[date] += 1
+            else:
+              add_dict[date] = 1
+
+  with open('stats_log.txt', 'w') as stats_log_out:
+    stats_log_out.write('Get\n')
+    for k, v in get_dict.items():
+      stats_log_out.write(k + ' ' + str(v) + '\n')
+    stats_log_out.write('Set\n')
+    for k, v in set_dict.items():
+      stats_log_out.write(k + ' ' + str(v) + '\n')
+    stats_log_out.write('Add\n')
+    for k, v in add_dict.items():
+      stats_log_out.write(k + ' ' + str(v) + '\n')
+
+
+def main():
+  files = sys.argv[1:]
+  rearrange_logs(files)
+
 
 if __name__ == '__main__':
-    app.run(main)
+  main()
