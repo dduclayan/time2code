@@ -1,31 +1,37 @@
-"""
-idea:
-1) read the file and read line by line
-2) reformat the date and store (date, filename) into a list
-3) sort the list by date and print them
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for sort_file_by_date.
 
-complexity: O(NlogN) where N is number of lines 
+plan:
+1. split line
+2. convert datetime to datetime object
+3. add filename, datetime, datetime obj to list
+4. sort by datetime obj
+
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of sort_file_by_date.
 """
-from absl import app
+
 from datetime import datetime
+import sys
 
-def main(argv):
-    sort_file_by_date(argv[1])
 
 def sort_file_by_date(file):
-    li = []
-    with open(file, 'r') as fd:
-        for line in fd:
-            words = line.split()
-            date_str = ' '.join(words[2:5]) 
-            filename = words[-1]
-            date_object = datetime.strptime(date_str, '%B %d, %Y')
-            li.append((date_str, date_object, filename))
-    sorted_files = sorted(li, key=lambda d:(d[1]), reverse=True)
-    for k,v,j in sorted_files:
-        print(j + ', ' + k)
-    return
+  li = []
+  with open(file, 'r') as in_file:
+    for line in in_file:
+      words = line.split()
+      date_string = ' '.join(words[2:5])
+      file_name = words[-1]
+      date_obj = datetime.strptime(date_string, '%B %d, %Y')
+      li.append((date_string, date_obj, file_name))
+  sorted_dates = li.sort(li, key=lambda x: (x[1]), reverse=True)
+  for k, v, i in sorted_dates:
+    print(k, ',', i)
+
+
+def main():
+  file = sys.argv[1]
+  sort_file_by_date(file)
 
 
 if __name__ == '__main__':
-    app.run(main)
+  main()
