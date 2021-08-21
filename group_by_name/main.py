@@ -1,30 +1,39 @@
 """
-Idea:
-1) read the file
-2) read each line and split words into a list
-3) combine all lists into a bigger list and sort the sublists by 2nd item
-4) write to a new file 
+plan:
+1. add line to a list
+2. run sort on list and lambda sort and group by the groupname
 
-Complexity: O(NlogN) where N is # of lines
+sort() - use on an existing list, returns None
+sorted() - can be used on any iterable, returns a new list
 """
 
+import sys
 
-from absl import app
 
-def main(argv):
-    grouped(argv[1])
+def GroupByGroupName(file):
+  """Takes in a file and groups lines by groupname."""
+  with open(file, 'r') as in_file:
+    groups = []
 
-def grouped(file):
-    li = []
-    with open(file, 'r') as fd:
-        for line in fd:
-            li.append(line.split())
-    newli = sorted(li, key=lambda i: i[1])
-    with open("newfile", 'w') as fd:
-        #for i in newli:
-         #   fd.write(' '.join(i) + '\n')
-        fd.writelines([' '.join(line) + '\n' for line in newli] )
-    return
+    for line in in_file:
+      groups.append(line)
+    # sorts by the second field in the line
+    groups.sort(key=lambda word: word.split(' ')[1].lower())
+
+    with open('new_file', 'w') as out_file:
+      s = ListToString(groups)
+      out_file.write(s)
+
+
+def ListToString(s):
+  string = ''
+  return string.join(s)
+
+
+def main():
+  file = sys.argv[1]
+  GroupByGroupName(file)
+
 
 if __name__ == '__main__':
-    app.run(main)
+  main()
