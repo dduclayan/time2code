@@ -1,30 +1,38 @@
-"""
-idea:
-1) read each line save it as a list
-2) use a list to store all the lines (list of lists)
-3) sort the list by 1st and 2nd column
-4) write the list back to a new file adding a new asset# columnn
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for sort_assets.
 
-complexity: O(NlogN) where N is number of lines
+plan:
+1. creat function that sorts assets
+2. create function that prepends the asset# s
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of sort_assets.
 """
 
-from absl import app
 from datetime import datetime
+import sys
 
-def main(argv):
-    sort_assets(argv[1])
 
 def sort_assets(file):
-    big_list = []
-    with open(file, 'r') as f1, open('new_assets', 'w') as f2:
-        f2.write('Asset# ' + f1.readline())
-        big_list = [line.split() for line in f1]
-        big_list = sorted(big_list, key=lambda i:(i[0], datetime.strptime(i[1], '%m/%d/%Y')))
-        for i in range(len(big_list)):
-            f2.write(str(i+1).zfill(6) + ' ' + ' '.join(big_list[i]) + '\n')
-    return
+  with open(file, 'r') as in_file, open('new_assets.txt', 'w') as out_file:
+    assets_list = []
+    first_line = 'Asset# ' + in_file.readline()  # skips header
+    for line in in_file:
+      assets_list.append(line.split())
+
+    sorted_assets_list = sorted(
+        assets_list, key=lambda x: (x[0], datetime.strptime(x[1], '%m/%d/%Y')))
+    asset_num = 0
+
+    out_file.write(first_line)
+    for line in sorted_assets_list:
+      line = ' '.join(line)
+      asset_num += 1
+      out_file.write(str(asset_num).zfill(6) + ' ' + line + '\n')
+
+
+def main():
+  file = sys.argv[1]
+  sort_assets(file)
+
 
 if __name__ == '__main__':
-    app.run(main)
-            
-
+  main()
