@@ -1,23 +1,31 @@
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for string_formatting.
+
+plan:
+1. create a for in range loop that loops until n
+2. simple print of i in the various formats that the problem asks
+
+sample outout:
+16    20    10 10000
+17    21    11 10001
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of string_formatting.
 """
-idea
-1) use for loop to deal with num from 1 to n
-2) use python default func to convert the number
 
-complexity: O(N) where N is input number
-"""
-from absl import app
 
-def main(argv):
-    string_format(argv[1])
+def format_string(n):
+  try:
+    n = int(n)
+  except ValueError:
+    print("Input needs to be a number!")
+  for i in range(1, n + 1):
+    print(
+        str(i) + ' ' + str(oct(i)[2:]) + ' ' + str(hex(i)[2:]) + ' ' +
+        str(bin(i)[2:]))
 
-def string_format(d_str):
-    if not d_str.isdigit():
-        return False
-    d = int(d_str)
-    for i in range(1, d+1):
-        print('{0:2d} {0:3o} {0:2x} {0:7b}'.format(i))
-    return True
+
+def main():
+  format_string(17)
 
 
 if __name__ == '__main__':
-    app.run(main)
+  main()
