@@ -1,32 +1,32 @@
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for lonely_int.
+
+plan:
+1. go through list and add them to a dict
+2. if key is in dict, +1 to value. if not, key[value] = 1
+3. loop through dict and print out the key that has a value of 1
+
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of lonely_int.
 """
-idea:
-1) create a dict {num -> True/False}
-2) True means occurring once
-3) False means occuring twice or not exist
-4) print out the dict key that is True
 
-complexity: O(N) where N is number of items in the list
-"""
 
-from absl import app
+def lonely_int(nums):
+  d = {}
+  for num in nums:
+    if num in d:
+      d[num] += 1
+    if num not in d:
+      d[num] = 1
 
-def main(argv):
-    del argv
-    lonely_integer([1,1,2])
-    lonely_integer([0,0,1,2,1])
+  for k, v in d.items():
+    if v == 1:
+      return k
 
-def lonely_integer(list):
-    dic = {}
-    for i in list:
-        if i in dic:
-            dic[i] = False
-        else:
-            dic[i] =  True
-    for k,v in dic.items():
-        if v:
-            print(k)
-            return
-    return
 
-if __name__ =='__main__':
-    app.run(main)
+def main():
+  a = [1, 2, 3, 4, 3, 2, 1]
+  lonely_int(a)
+
+if __name__ == '__main__':
+  main()
+
