@@ -1,74 +1,48 @@
-"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for rearrange_logs.
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for reasonable_costs.
 
-question:
-can I assume that the log file is already sorted by date?
+output:
+the lines sorted by date where cost is between $20 and $50, and recommended is Yes
 
 plan:
-1. create dict for each api call to count calls
-2. read through log files line by line
-3. if line contains '<api call>', add line to '<api> file'
+1. read file line by line, check if recommended is yes -> add to list
+2. read through list, split line, check if price is between 20 and 50 -> add to new list
+3. read thru list, split line, lambda sort date
 
-
-TODO(dduclayan): DO NOT SUBMIT without a detailed description of rearrange_logs.
+time complexity:
+O(n log n) due to sorted()?
 """
 import sys
+from datetime import datetime
 
 
-def rearrange_logs(files):
-  log_files = []
+def reasonable_costs(file):
+  is_recommended = []
+  is_between_20_and_50 = []
+  with open(file, 'r') as in_file:
+    first_line = in_file.readline()  # skip first line which is just headers
+    for line in in_file:
+      segment = line.split()
+      if segment[3] == 'Yes':
+        is_recommended.append(line.rstrip('\n'))
 
-  for file in files:
-    log_files.append(file)
+  for item in is_recommended:
+    segment = item.split()
+    date_str = segment[0]
+    city = segment[1]
+    recommended_status = segment[-1]
+    date_obj = datetime.strptime(date_str, '%m/%d/%y')  # need to convert to a datetime obj to be able to compare/sort
+    cost = float(segment[2].lstrip('$'))
+    if cost > 20 and cost < 50:
+      is_between_20_and_50.append((date_obj, city, cost, recommended_status))
 
-  get_dict = {}
-  add_dict = {}
-  set_dict = {}
-  with open('get_log.txt',
-            'w') as get_log_out, open('set_log.txt', 'w') as set_log_out, open(
-                'add_log.txt', 'w') as add_log_out:
-    for file in log_files:
-      with open(file, 'r') as in_file:
-        for line in in_file:
-          segment = line.split()
-          date = segment[1]
-          call = segment[2]
-
-          if call == 'Get':
-            get_log_out.write(line)
-            if date in get_dict:
-              get_dict[date] += 1
-            else:
-              get_dict[date] = 1
-
-          if call == 'Set':
-            set_log_out.write(line)
-            if date in set_dict:
-              set_dict[date] += 1
-            else:
-              set_dict[date] = 1
-
-          if call == 'Add':
-            add_log_out.write(line)
-            if date in add_dict:
-              add_dict[date] += 1
-            else:
-              add_dict[date] = 1
-
-  with open('stats_log.txt', 'w') as stats_log_out:
-    stats_log_out.write('Get\n')
-    for k, v in get_dict.items():
-      stats_log_out.write(k + ' ' + str(v) + '\n')
-    stats_log_out.write('Set\n')
-    for k, v in set_dict.items():
-      stats_log_out.write(k + ' ' + str(v) + '\n')
-    stats_log_out.write('Add\n')
-    for k, v in add_dict.items():
-      stats_log_out.write(k + ' ' + str(v) + '\n')
+  sorted_by_date = sorted(is_between_20_and_50, key=lambda x: (x[0]))
+  for k, v, i, x, in sorted_by_date:
+    print(k.strftime('%m/%d/%y'), v, i, x)
 
 
 def main():
-  files = sys.argv[1:]
-  rearrange_logs(files)
+  file = sys.argv[1]
+  reasonable_costs(file)
 
 
 if __name__ == '__main__':
