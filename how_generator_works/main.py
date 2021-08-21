@@ -1,21 +1,35 @@
-"""
-idea:
-1) use generator comprehension to go throug lines in file
-2) get the sum and count the total number
-3) print out the sum/count
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for generator.
 
-complexity: O(N) where N is number of lines
-"""
+1. use generator to return value
+2. add value to a list
+3. return sum / len(list)
 
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of generator.
+"""
 import sys
 
-def get_avg(file):
-    num_gen = (int(line.strip()) for line in open(file, 'r'))
-    count = 0
-    sum = 0
-    for num in num_gen:
-        sum += num
-        count += 1
-    return sum/count
 
-print(get_avg(sys.argv[1]))
+def generator(file):
+  with open(file, 'r') as in_file:
+    for line in in_file:
+      yield int(line)
+
+
+def find_avg():
+  file = sys.argv[1]
+  total = 0
+  num_len = 0
+
+  for num in generator(file):
+    total += num
+    num_len += 1
+
+  return int(sum / num_len)
+
+
+def main():
+  print(find_avg())
+
+
+if __name__ == '__main__':
+  main()
