@@ -1,41 +1,50 @@
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for count_c.
+
+plan:
+1. count code block
+- if first two char == '/*', set 'is_code_block' to True
+- if 'is_code_block' == True, comments += 1
+
+2. count regular comments
+- if line[1:] == '//', comments += 1
+
+3. print(code_lines - comments)
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of count_c.
 """
-Idea:
-1) read the file line by line
-2) check for empty space
-3) check for comment line; if it starts with '^' and ends with '$' and if the amount of '^' and '$' are equal
-4) if not empty nor comment, counter++
-
-Complexity: O(NxM) where N is # of lines and M is # of characters in a line
-"""
+#!/usr/bin/python
+import sys
 
 
-from absl import app
+def count_lines_of_code(file):
+  with open(file, 'r') as in_file:
+    comments = 0
+    code_lines = 0
+    is_code_block = False
 
-def main(argv):
-    print(count_lines(argv[1]))
+    for line in in_file:
+      code_lines += 1
+      # count code block comments
+      if line[:2] == '/*':
+        is_code_block = True
+        comments += 1
+      elif is_code_block:
+        comments += 1
+      elif line[-2:] == '*/':
+        is_code_block == False
+        comments += 1
 
-def count_lines(file):
-    counter = 0
-    with open(file, 'r') as fd:
-        for line in fd:
-            # strip leading and ending spaces
-            words = line.strip()
-            if words  == '':
-                continue
-            if words[0] == '^' and words[-1] == '$':
-                c = 0
-                for v in words:
-                    # checks if number of '^' and '$' are the same
-                    # we don't care about how many are there
-                    if v == '^':
-                        c += 1
-                    if v == '$':
-                        c -= 1
-                if c == 0:
-                    continue
-            counter += 1
-    return counter
+      # count regular comments
+      if line[:2] == '//' and not is_code_block:
+        comments += 1
+
+    print(f'{code_lines} - {comments}')
+
+
+def main():
+  file = sys.argv[1]
+  count_lines_of_code(file)
 
 if __name__ == '__main__':
-    app.run(main)
-            
+  main()
+
