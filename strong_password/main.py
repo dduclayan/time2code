@@ -1,53 +1,48 @@
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for strong_pw.
+
+plan:
+1. create var(int) called "score"
+2. +1 to score if pw has a number, or lower_case, upper_case, special_char
+3. use any() to test if iterable matches n, l, u, s
+4. return either score or 6-n
+
+
+pw req:
+len = 6
+contain 1 digit
+one lowercase eng char
+one uppercase eng char
+one special char
+
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of strong_pw.
 """
-idea:
-1) create four varialbes to track each requirement
-2) go through the passowrd char by char
-3) check all four variables and return how many more chars are needed
-
-complexity: O(N) where N is the number of chars in password
-"""
-
-from absl import app
-
-def main(argv):
-    print(strong_password(argv[1]))
-
-def strong_password(pw):
-    numbers = "0123456789"
-    lower_case = "abcdefghijklmnopqrstuvwxyz"
-    upper_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    special_characters = "!@#$%^&*()-+"
-    
-    n_count = 0
-    l_count = 0
-    u_count = 0
-    s_count = 0
-
-    for c in pw:
-        if c in numbers:
-            n_count += 1
-        elif c in lower_case:
-            l_count += 1
-        elif c in upper_case:
-            u_count += 1
-        else:
-            s_count += 1
-
-    need = 0
-    if n_count == 0:
-        need += 1
-    if l_count == 0:
-        need += 1
-    if u_count == 0:
-        need += 1
-    if s_count == 0:
-        need += 1
-
-    if need > 6 - len(pw):
-        return need
-    return 6 - len(pw)
 
 
+def minimum_num(n, password):
+  special_characters = "!@#$%^&*()-+"
 
-if __name__ == '__main__':
-    app.run(main)
+  score = 0
+
+  if not any(x.islower() for x in password):
+    score += 1
+  if not any(x.isdigit() for x in password):
+    score += 1
+  if not any(x.isupper() for x in password):
+    score += 1
+  if not any(x for x in special_characters):
+    score += 1
+
+  y = max(score, 6-n)
+  print(y)
+  return y
+
+
+def main():
+  minimum_num(3, "Ab1")
+  minimum_num(11, "#HackerRank")
+  minimum_num(2, "d@")
+
+
+if __name__ == "__main__":
+  main()
