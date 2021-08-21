@@ -1,40 +1,44 @@
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for create_username.
+
+output: a new file with username at the last column, the username is the first letter of the user and the lastname (e.g. Kasey Cook -> kcook). If there's collision for usernames, the new one should add the next available integer to its end (e.g. kcook, kcook2, kcook3) (we skip 1 to avoid confusion)
+
+Firstname Lastname EmployeeID StartDate Username
+Kasey Cook 1 10/13/2000 kcook
+Kareem Dalby 4 10/16/2000 kdalby
+Karter Cook 5 10/17/2000 kcook2
+Kavan Cook 6 10/18/2000 kcook3
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of create_username.
 """
-idea:
-1) read each line and get first and last name
-2) get 1st letter of fistname and concatenate with lastname as username
-3) keep a dic for used usernames, check everytime when a new username created
-4) key -> value will be username -> counter 
-5) write to a new file with extra column 'Username'
+import sys
 
-complexity: O(N) where N is the number of lines
-"""
 
-from absl import app
+def create_username(file):
+  usernames = {}
+  output = []
+  with open(file, 'r') as in_file:
+    for line in in_file:
+      words = line.split()
+      username = words[0][0].lower() + words[1].lower()
+      rest_of_line = ' '.join(words[:4])
 
-def main(argv):
-    create_usernames(argv[1])
-    return
+      if username in usernames:
+        usernames[username] += 1
+        newusername = username + str(usernames[username])
+        output.append(rest_of_line + ' ' + newusername)
+      else:
+        usernames[username] = 1
+        output.append(rest_of_line + ' ' + username)
 
-def create_usernames(file):
-    dic = {}
-    f = open('newfile', 'w')
-    with open(file, 'r') as fd:
-        header = fd.readline()
-        f.write(header.rstrip() + ' Username\n')
-        for line in fd.readlines():
-            words = line.split()
-            username = (words[0][0] + words[1]).lower()
-            if username in dic:
-                dic[username] += 1
-                username = username + str(dic[username])
-            else:
-                dic[username] = 1
-            f.write(' '.join(words) + ' ' + username + '\n')
-    f.close()
+    with open('create_username_output.txt', 'w') as out_file:
+      for line in output:
+        out_file.write(line + ' \n')
+
+
+def main():
+  file = sys.argv[1]
+  create_username(file)
+
 
 if __name__ == '__main__':
-    app.run(main)
-
-
-
-
+  main()
