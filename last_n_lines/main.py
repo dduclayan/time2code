@@ -1,29 +1,36 @@
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for last_n_lines.
+
+plan:
+1. open file
+2. write all lines to a list
+3. return/print last n lines
+-- ex
+-- print list[-n:]
+
+edge cases:
+1. what if 'n' is a negative number?
+
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of last_n_lines.
 """
-idea:
-1) read the file and get num of lines
-2) make sure input N is non-negative int
-3) compare N and num of lines, if N is bigger, just print the whole file
-4) if N is smaller, print the last N lines
+import sys
 
-complexity: O(n) where n is number of lines
-"""
 
-from absl import app
+def last_n_lines(file, n):
+  # I believe this method should be better than read() since read() will fail
+  # if the file is too large.
+  file_lines = []
+  with open(file, 'r') as in_file:
+    for line in in_file:
+      file_lines.append(line)
 
-def main(argv):
-    last_n_lines(argv[1], argv[2])
+  for line in file_lines[-n:]:
+    print(line.strip('\n'))
 
-def last_n_lines(file, N):
-    if not N.isdigit():
-        print('N is not an non-negative integer')
-        return
-    with open(file, 'r') as f:
-        lines = f.read()
-        
-        # it takes care of N greater than len 
-        print(''.join(lines[-int(N):]))
-    return
+
+def main():
+  file = sys.argv[1]
+  last_n_lines(file, 3)
 
 
 if __name__ == '__main__':
-    app.run(main)
+  main()
