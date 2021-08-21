@@ -1,37 +1,43 @@
-"""
-idea:
-2) create RE patterns for each item
-3) scan thru lines and search for each patterns and save them into a tuple, then to a list
-4) sort the list by name and output to a new file
+"""TODO(dduclayan): DO NOT SUBMIT without one-line documentation for clear_mess.
 
-Complexity: O(NlogN) where N is number of lines
-"""
+plan:
+1. b/c we need to sort, we will add contacts to a list
+2. we will find the user/date/ph thru regex search
+3. after adding all contact info to list, run 'sorted()' on it
+4. write the list to new file
 
+TODO(dduclayan): DO NOT SUBMIT without a detailed description of clear_mess.
+"""
 import re
-from absl import app
+import sys
 
-def main(argv):
-    clear_mess(argv[1])
 
 def clear_mess(file):
-    contacts = []
-    name_p = r'[A-Za-z]+'
-    phone_p = r'(?:[0-9]{3}-){2}[0-9]{4}'
-    date_p = r'(?:[0-9]{2}\/){2}[0-9]{4}'
+  users = []
+  username_r = r'[a-zA-Z]+'
+  date_r = r'(?:[0-9]{2}\/){2}[0-9]{4}'
+  ph_r = r'(?:[0-9]{3}-){2}[0-9]{4}'
 
-    with open(file, 'r') as f:
-        for line in f:
-            name = re.search(name_p, line)
-            phone = re.search(phone_p, line)
-            date = re.search(date_p, line)
-            contacts.append((name.group(0), phone.group(0), date.group(0)))
-    
-    contacts = sorted(contacts, key=lambda i:i[0])
+  with open(file, 'r') as in_file:
+    for line in in_file:
+      username = re.search(username_r, line)
+      date = re.search(date_r, line)
+      ph = re.search(ph_r, line)
 
-    with open('new_file', 'w') as f:
-        f.write('Username Phone_num Start_date\n')
-        for contact in contacts:
-            f.write(' '.join(contact) +  '\n')
+      users.append((username.group(), ph.group(), date.group()))
+
+  sorted_users = sorted(users, key=lambda x: x[0])
+
+  with open('clear_mess_output.txt', 'w') as out_file:
+    out_file.write('Username Phone_num Start_date\n')
+    for user in sorted_users:
+      out_file.write(' '.join(user) + '\n')
+
+
+def main():
+  file = sys.argv[1]
+  clear_mess(file)
+
 
 if __name__ == '__main__':
-    app.run(main)
+  main()
