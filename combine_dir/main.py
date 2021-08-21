@@ -1,41 +1,60 @@
 """
-idea:
-1) walk dir1 and save all dirs/filenames to a dict
-2) walk dir2 and check if each item has the same path and filename
-3) if so, rename filename and move it to dir1
-4) if not, simply move it to dir1
 
-complexity: O(N) where N is number of dirs and files
+plan:
+1. os.walk() through dir 1, create a dict of dir1's files as [filename: subdir/filename]
+2. os.walk() through dir 2, check if file is in the dict, if it is, append '_2'
+3. create 'new_dir', create files from dict into 'new_dir'
+
 """
 
 import os
 import shutil
-from absl import app
 
-def main(argv):
-    combine_dirs(argv[1], argv[2])
 
-def combine_dirs(d1, d2):
-    dir_dic = dict()
-    for root, dirs, files in os.walk(d1):
-        for file in files:
-            sub_dir = '/'.join(root.split('/')[1:])
-            sub_dir_file = sub_dir + '/' + file
-            dir_dic[sub_dir_file] = root + '/' + file
+def combine_two_dir(dir1, dir2):
+  dir_dict = {}
+  new_dir = '/google/src/cloud/dduclayan/daily-coding-challenge/google3/experimental/users/dduclayan/python/new_dir'
 
-    for root, dirs, files in os.walk(d2):
-        for file in files:
-            sub_dir = '/'.join(root.split('/')[1:])
-            sub_dir_file = sub_dir + '/' + file
-            full_dir_file = root + '/' + file
-            if sub_dir_file in dir_dic:
-                shutil.move(full_dir_file,  dir_dic[sub_dir_file] + '_2')
-            else:
-                os.makedirs(d1 + '/' + sub_dir, exist_ok=True)
-                shutil.move(full_dir_file, d1 + '/' + sub_dir_file)
-    os.rename(d1, 'new_dir')
-    shutil.rmtree(d2, ignore_errors=True)
-    return
+  for root, _, files in os.walk(dir1):
+    subdir = root.split('/')[-1]
+    for file in files:
+      subdir_file = subdir + '/' + file
+      dir_dict[file] = subdir_file
+
+  for root, _, files in os.walk(dir2):
+    subdir = root.split('/')[-1]
+    for file in files:
+      subdir_file = subdir + '/' + file
+      if file in dir_dict:
+        dir_dict[file] = subdir_file + '_2'
+
+  os.makedirs('new_dir', exist_ok=True)
+
+  for _, subdir_file in dir_dict.items():
+    subdir = subdir_file.split('/')[0]
+    filename = subdir_file.split('/')[1]
+
+    if subdir == 'dir2':
+      path = os.path.join(new_dir, filename)
+      open(path, 'w')
+
+    if subdir[:7] == 'sub_dir':
+      dir_path = os.path.join(new_dir, subdir)
+      file_path = os.path.join(dir_path, filename)
+      os.makedirs(dir_path)
+      open(file_path, 'w')
+
+
+def main():
+  dir1 = '/google/src/cloud/dduclayan/daily-coding-challenge/google3/experimental/users/dduclayan/python/dir1'
+  dir2 = '/google/src/cloud/dduclayan/daily-coding-challenge/google3/experimental/users/dduclayan/python/dir2'
+
+  combine_two_dir(dir1, dir2)
+
+  # shutil.rmtree(dir1, ignore_errors=True)
+  # shutil.rmtree(dir2, ignore_errors=True)
 
 if __name__ == '__main__':
-    app.run(main)
+  main()
+
+
